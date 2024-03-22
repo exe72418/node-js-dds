@@ -5,73 +5,73 @@ import bodyParser from "body-parser";
 const app = express();
 app.use(bodyParser.json());
 
-const readData = () => {
+const leerDatos = () => {
   try {
-    const data = fs.readFileSync("./db.json");
-    return JSON.parse(data);
+    const datos = fs.readFileSync("./db.json"); // Nombre del archivo cambiado a autos.json
+    return JSON.parse(datos);
   } catch (error) {
     console.log(error);
   }
 };
 
-const writeData = (data) => {
+const escribirDatos = (datos) => {
   try {
-    fs.writeFileSync("./db.json", JSON.stringify(data));
+    fs.writeFileSync("./db.json", JSON.stringify(datos)); // Nombre del archivo cambiado a autos.json
   } catch (error) {
     console.log(error);
   }
 };
 
 app.get("/", (req, res) => {
-  res.send("Welcome to my first API with Node js!");
+  res.send("¡Bienvenido a mi API de alquiler de autos!");
 });
 
-app.get("/books", (req, res) => {
-  const data = readData();
-  res.json(data.books);
+app.get("/autos", (req, res) => {
+  const datos = leerDatos();
+  res.json(datos.autos); // "libros" cambiado a "autos"
 });
 
-app.get("/books/:id", (req, res) => {
-  const data = readData();
+app.get("/autos/:id", (req, res) => {
+  const datos = leerDatos();
   const id = parseInt(req.params.id);
-  const book = data.books.find((book) => book.id === id);
-  res.json(book);
+  const auto = datos.autos.find((auto) => auto.id === id); // "libro" cambiado a "auto"
+  res.json(auto);
 });
 
-app.post("/books", (req, res) => {
-  const data = readData();
-  const body = req.body;
-  const newBook = {
-    id: data.books.length + 1,
-    ...body,
+app.post("/autos", (req, res) => {
+  const datos = leerDatos();
+  const cuerpo = req.body;
+  const nuevoAuto = {
+    id: datos.autos.length + 1, // "libros" cambiado a "autos"
+    ...cuerpo,
   };
-  data.books.push(newBook);
-  writeData(data);
-  res.json(newBook);
+  datos.autos.push(nuevoAuto); // "libros" cambiado a "autos"
+  escribirDatos(datos);
+  res.json(nuevoAuto);
 });
 
-app.put("/books/:id", (req, res) => {
-  const data = readData();
-  const body = req.body;
+app.put("/autos/:id", (req, res) => {
+  const datos = leerDatos();
+  const cuerpo = req.body;
   const id = parseInt(req.params.id);
-  const bookIndex = data.books.findIndex((book) => book.id === id);
-  data.books[bookIndex] = {
-    ...data.books[bookIndex],
-    ...body,
+  const indiceAuto = datos.autos.findIndex((auto) => auto.id === id); // "libro" cambiado a "auto"
+  datos.autos[indiceAuto] = {
+    ...datos.autos[indiceAuto],
+    ...cuerpo,
   };
-  writeData(data);
-  res.json({ message: "Book updated successfully" });
+  escribirDatos(datos);
+  res.json({ mensaje: "Alquiler de auto actualizado exitosamente" }); // Mensaje actualizado
 });
 
-app.delete("/books/:id", (req, res) => {
-  const data = readData();
+app.delete("/autos/:id", (req, res) => {
+  const datos = leerDatos();
   const id = parseInt(req.params.id);
-  const bookIndex = data.books.findIndex((book) => book.id === id);
-  data.books.splice(bookIndex, 1);
-  writeData(data);
-  res.json({ message: "Book deleted successfully" });
+  const indiceAuto = datos.autos.findIndex((auto) => auto.id === id); // "libro" cambiado a "auto"
+  datos.autos.splice(indiceAuto, 1);
+  escribirDatos(datos);
+  res.json({ mensaje: "Alquiler de auto eliminado exitosamente" }); // Mensaje actualizado
 });
 
 app.listen(3000, () => {
-  console.log("Server listening on port 3000");
+  console.log("Servidor escuchando en el puerto 3000");
 });
